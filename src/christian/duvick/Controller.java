@@ -49,20 +49,24 @@ public class Controller {
     }
 
     public void onAddButtonAction() {
-        try {
-            String name = foodNameField.getText();
-            String cals = calorieField.getText();
-            Food food = new Food(name, Integer.parseInt(cals));
-            foods.add(food);
-            foodList.addFood(food);
-            foodNameField.clear();
-            calorieField.clear();
-            System.out.println(food);
-            updateDeficit();
-            clearError();
-            System.out.println(foodList.getFoodList());
-        } catch (Exception e) {
-            errorLabel.setText("Food field and calorie field\nmust not be empty. The calorie field\nmust contain only numbers.");
+        if (!foodNameField.getText().isEmpty() && !calorieField.getText().isEmpty()) {
+            try {
+                String name = foodNameField.getText();
+                String cals = calorieField.getText();
+                Food food = new Food(name, Integer.parseInt(cals));
+                foods.add(food);
+                foodList.addFood(food);
+                foodNameField.clear();
+                calorieField.clear();
+                System.out.println(food);
+                updateDeficit();
+                clearError();
+                System.out.println(foodList.getFoodList());
+            } catch (Exception e) {
+                errorLabel.setText("Food field and calorie field\nmust not be empty. The calorie field\nmust contain only numbers.");
+            }
+        } else {
+            errorLabel.setText("Food cannot be empty");
         }
     }
 
@@ -87,7 +91,7 @@ public class Controller {
         return file;
     }
 
-    public void retrieve() throws IOException, ClassNotFoundException {
+    public void retrieve() {
         try {
             FileInputStream file = new FileInputStream(choose());
             ObjectInputStream input = new ObjectInputStream(file);

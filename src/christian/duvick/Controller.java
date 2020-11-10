@@ -133,6 +133,11 @@ public class Controller {
     public void updateDeficit() {
         int deficit = stats.calculateDeficit();
         deficitLabel.setText(String.valueOf(deficit));
+        if (deficit < 0) {
+            deficitLabel.setStyle("-fx-text-fill: #800000;");
+        } else {
+            deficitLabel.setStyle("-fx-text-fill: white;");
+        }
     }
 
 

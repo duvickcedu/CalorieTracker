@@ -1,10 +1,6 @@
 package christian.duvick;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class FoodList implements Serializable {
@@ -40,10 +36,6 @@ public class FoodList implements Serializable {
         return "FoodList{" +
                 "foods=" + stringBuilder.toString() +
                 '}';
-    }
-
-    public static void setInstance(FoodList instance) {
-        FoodList.instance = instance;
     }
 
     public LinkedList<Food> getFoodList() {

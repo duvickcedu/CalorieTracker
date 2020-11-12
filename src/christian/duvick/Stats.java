@@ -3,8 +3,8 @@ package christian.duvick;
 import java.io.Serializable;
 
 public class Stats implements Serializable {
-    Integer target = 2000;
-    Integer deficit = 2000;
+    private Integer target = 2000;
+    private Integer deficit = 2000;
     private static Stats instance = null;
 
     public static Stats getInstance() {
@@ -13,18 +13,8 @@ public class Stats implements Serializable {
         }
         return instance;
     }
-
-    public Stats(Integer target) {
-        this.target = target;
-        this.deficit = target;
-    }
-
     public Stats() {
 
-    }
-
-    public static void setInstance(Stats instance) {
-        Stats.instance = instance;
     }
 
     public void retrieve(Stats loadedStats) {
@@ -44,9 +34,5 @@ public class Stats implements Serializable {
     public int calculateDeficit() {
         deficit = getTarget() - FoodList.getInstance().getCalorieTotal();
         return deficit;
-    }
-
-    public void setDeficit(Integer deficit) {
-        this.deficit = deficit;
     }
 }

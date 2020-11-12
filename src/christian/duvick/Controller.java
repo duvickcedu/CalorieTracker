@@ -11,45 +11,48 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.Calendar;
 
 public class Controller {
     Stats stats = Stats.getInstance();
     FoodList foodList = FoodList.getInstance();
     ObservableList<Food> foods;
     @FXML
-    Button addButton;
+    private TextField foodNameField;
     @FXML
-    TextField foodNameField;
+    private TextField calorieField;
     @FXML
-    TextField calorieField;
+    private ListView<Food> foodListView;
     @FXML
-    ListView<Food> foodListView;
+    private Label calorieGoalLabel;
     @FXML
-    Label calorieGoalLabel;
+    private Label deficitLabel;
     @FXML
-    Label deficitLabel;
+    private TextField targetField;
     @FXML
-    Button setButton;
+    private Label errorLabel;
     @FXML
-    TextField targetField;
-    @FXML
-    Label errorLabel;
-    @FXML
-    Button saveButton;
-    @FXML
-    Button removeButton;
 
     public void onRemoveButtonAction() {
-        int index = foodListView.getSelectionModel().getSelectedIndex();
-        foodListView.getItems().remove(index);
-        foodList.getFoodList().remove(index);
-        System.out.println("foodlist size = " + foodList.getFoodList().size());
-        System.out.println("foods size = " + foods.size());
-        updateDeficit();
+        if (!foodList.getFoodList().isEmpty()) {
+            int index = foodListView.getSelectionModel().getSelectedIndex();
+            foodListView.getItems().remove(index);
+            foodList.getFoodList().remove(index);
+            System.out.println("foodlist size = " + foodList.getFoodList().size());
+            System.out.println("foods size = " + foods.size());
+            updateDeficit();
+        }
     }
 
     public void onAddButtonAction() {
-        if (!foodNameField.getText().isEmpty() && !calorieField.getText().isEmpty()) {
+        if (foodNameField.getText().isBlank() && calorieField.getText().isBlank()) {
+            errorLabel.setText("Food cannot be empty and calorie field" +
+                    " must not be empty. The calorie field must contain only numbers.");
+        } else if (foodNameField.getText().isBlank()) {
+            errorLabel.setText("Food cannot be empty");
+        } else if (calorieField.getText().isBlank()) {
+            errorLabel.setText("Calorie field must not be empty.");
+        } else {
             try {
                 String name = foodNameField.getText();
                 String cals = calorieField.getText();
@@ -62,15 +65,14 @@ public class Controller {
                 updateDeficit();
                 clearError();
                 System.out.println(foodList.getFoodList());
-            } catch (Exception e) {
-                errorLabel.setText("Food field and calorie field\nmust not be empty. The calorie field\nmust contain only numbers.");
+            } catch (NumberFormatException nfe) {
+                errorLabel.setText("The calorie field must contain only numbers.");
             }
-        } else {
-            errorLabel.setText("Food cannot be empty");
         }
     }
 
-    public void save() throws IOException {
+
+    public void save() {
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(saveFile());
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -84,6 +86,8 @@ public class Controller {
     public File saveFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Resource File");
+        String date = java.time.LocalDate.now().toString();
+        fileChooser.setInitialFileName(date + "_Calories");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
         Stage stage = new Stage();
@@ -93,7 +97,7 @@ public class Controller {
 
     public void retrieve() {
         try {
-            FileInputStream file = new FileInputStream(choose());
+            FileInputStream file = new FileInputStream(retrieveFile());
             ObjectInputStream input = new ObjectInputStream(file);
             FoodList fl = (FoodList) input.readObject();
             foodList.retrieve(fl);
@@ -106,14 +110,14 @@ public class Controller {
     }
 
     //https://docs.oracle.com/javase/8/javafx/api/javafx/stage/FileChooser.html
-    public File choose() {
+    public File retrieveFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
         Stage stage = new Stage();
         File selectedFile = fileChooser.showOpenDialog(stage);
-        return  selectedFile;
+        return selectedFile;
     }
 
     public void clearError() {
@@ -143,7 +147,6 @@ public class Controller {
             deficitLabel.setStyle("-fx-text-fill: white;");
         }
     }
-
 
 
     public void initialize() throws IOException, ClassNotFoundException {

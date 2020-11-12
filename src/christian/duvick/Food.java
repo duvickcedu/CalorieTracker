@@ -3,23 +3,15 @@ package christian.duvick;
 import java.io.Serializable;
 
 public class Food implements Serializable {
-    private String name;
-    private Integer calories;
+    private final String name;
+    private final Integer calories;
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Integer getCalories() {
         return calories;
-    }
-
-    public void setCalories(Integer calories) {
-        this.calories = calories;
     }
 
     public Food(String name, Integer calories) {

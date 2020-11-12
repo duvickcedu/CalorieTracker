@@ -6,12 +6,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Main extends Application {
-    public static int HEIGHT = 400;
-    public static int WIDTH = 600;
-
+/**
+ * This project is a calorie tracker
+ * It extends application so therefore it has a GUI
+ * @author Christian Duvick
+ */
+public class Driver extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
+        int HEIGHT = 400;
+        int WIDTH = 600;
         primaryStage.setResizable(false);
         Parent root = FXMLLoader.load(getClass().getResource("GUI.fxml"));
         primaryStage.setTitle("Calorie Tracker");
